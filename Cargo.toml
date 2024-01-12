@@ -2,5 +2,6 @@
 
 members = [
     "wfc",
-    "wfc_testing"
+    "implementation_testing",
+    "pig_core"
 ]

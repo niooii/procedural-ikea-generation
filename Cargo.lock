@@ -41,6 +41,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "implementation_testing"
+version = "0.1.0"
+dependencies = [
+ "pig_core",
+ "wfc",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -80,8 +88,6 @@ dependencies = [
 name = "pig_core"
 version = "0.1.0"
 dependencies = [
- "coord_2d",
- "grid_2d",
  "lazy_static",
  "rand",
  "rand_chacha",
@@ -215,12 +221,4 @@ dependencies = [
  "rand_chacha",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "wfc_testing"
-version = "0.1.0"
-dependencies = [
- "pig_core",
- "wfc",
 ]
