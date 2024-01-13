@@ -41,7 +41,7 @@ impl PhantomGrid {
         }
     }
 
-    pub fn adjacent_mut(&mut self, tile_coord: Coord, dir: Direction) -> Option<&mut Cell> {
+    pub fn adjacent_mut(&mut self, tile_coord: &Coord, dir: Direction) -> Option<&mut Cell> {
         match dir {
             Direction::UP => self.cell_at_mut(&Coord::new(tile_coord.x(), tile_coord.y() + 1)),
             Direction::DOWN => self.cell_at_mut(&Coord::new(tile_coord.x(), tile_coord.y() - 1)),
@@ -63,6 +63,14 @@ impl PhantomGrid {
                 self.cell_at(&Coord::new(x, y))
             })
         })
+    }
+
+    pub fn surrounded_by_collapsed_cells(&self, tile_pos: &Coord) -> bool {
+        todo!();
+    }
+
+    pub fn with_least_options(&self) -> Coord {
+        self.
     }
 
     pub fn print_state(&self) {

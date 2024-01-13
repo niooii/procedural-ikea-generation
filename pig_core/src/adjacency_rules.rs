@@ -11,6 +11,11 @@ pub struct AdjacencyRules {
 }
 
 impl AdjacencyRules {
+    pub fn new() -> Self {
+        Self {
+            rules: Vec::new()
+        }
+    }
     pub fn allow(&mut self, from: TileIndex, direction: Direction, to: TileIndex) {
         self.rules.push(Rule {
             from,
@@ -18,4 +23,6 @@ impl AdjacencyRules {
             to
         });
     }
+
+    // pub fn 
 }

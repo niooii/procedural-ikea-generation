@@ -1,8 +1,8 @@
 // use wfc::{self, AdjacencyRules, FrequencyHints, TileIndex};
-use pig_core::{self, phantom_grid::PhantomGrid, cell::Cell};
+use pig_core::{self, phantom_grid::PhantomGrid, cell::Cell, error::Result, tile_weights::TileWeights, adjacency_rules::AdjacencyRules, tile_types::*, Direction};
 use crate::pig_core::coord::Coord;
 
-fn main() {
+fn main() -> Result<()> {
     // let frequency_hints = FrequencyHints::new(
     //     vec![
     //         2,
@@ -64,12 +64,57 @@ fn main() {
 
     // println!("{output:?}");
 
+    let tile_weights = TileWeights::new(vec![
+        1.0, // BOTTOM_LEFT_CORNER
+        1.0, // BOTTOM_RIGHT_CORNER
+        1.0, // TOP_LEFT_CORNER
+        1.0, // TOP_RIGHT_CORNER
+        1.0, // LEFT_WALL
+        1.0, // RIGHT_WALL
+        1.0, // UP_WALL
+        1.0, // DOWN_WALL
+        1.0, // EMPTY
+        1.0, // NONE
+    ]);
+    
+    let mut adjacency_rules = AdjacencyRules::new();
+    
+    adjacency_rules.allow(BOTTOM_LEFT_CORNER, Direction::DOWN, LEFT_WALL);
+    
+    adjacency_rules.allow(BOTTOM_RIGHT_CORNER, Direction::DOWN, RIGHT_WALL);
+    
+    adjacency_rules.allow(TOP_LEFT_CORNER, Direction::UP, LEFT_WALL);
+    
+    adjacency_rules.allow(TOP_RIGHT_CORNER, Direction::UP, RIGHT_WALL);
+    
+    adjacency_rules.allow(LEFT_WALL, Direction::LEFT, TOP_LEFT_CORNER);
+    adjacency_rules.allow(LEFT_WALL, Direction::LEFT, BOTTOM_LEFT_CORNER);
+    
+    adjacency_rules.allow(RIGHT_WALL, Direction::RIGHT, TOP_RIGHT_CORNER);
+    adjacency_rules.allow(RIGHT_WALL, Direction::RIGHT, BOTTOM_RIGHT_CORNER);
+    
+    adjacency_rules.allow(UP_WALL, Direction::UP, TOP_LEFT_CORNER);
+    adjacency_rules.allow(UP_WALL, Direction::UP, TOP_RIGHT_CORNER);
+    
+    adjacency_rules.allow(DOWN_WALL, Direction::DOWN, BOTTOM_LEFT_CORNER);
+    adjacency_rules.allow(DOWN_WALL, Direction::DOWN, BOTTOM_RIGHT_CORNER);
+
     let mut grid = PhantomGrid::new();
 
-    grid.add_tile(Cell::new(Coord::new(2, 2)));
-    grid.add_tile(Cell::new(Coord::new(2, 1)));
-    grid.add_tile(Cell::new(Coord::new(-3, -5)));
-    grid.add_tile(Cell::new(Coord::new(-2, -2)));
+    grid.add_tile(Cell::new(Coord::new(2, 2)))?;
+    grid.add_tile(Cell::new(Coord::new(2, 1)))?;
+    grid.add_tile(Cell::new(Coord::new(-3, -5)))?;
+    grid.add_tile(Cell::new(Coord::new(-2, -2)))?;
 
     grid.print_state();
+
+    let mut counter = 0;
+    for cell in grid.radius_iter(2, Coord::new(2, 0)) {
+        println!("{:?}", cell);
+        counter+=1;
+    }
+
+    println!("{counter}");
+
+    Ok(())
 }

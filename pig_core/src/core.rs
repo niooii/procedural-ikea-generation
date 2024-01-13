@@ -1,4 +1,4 @@
-use crate::{TileIndex, coord::Coord, statics, cell::Cell, EMPTY};
+use crate::{TileIndex, coord::Coord, statics, cell::Cell, tile_types::*, adjacency_rules::AdjacencyRules, tile_weights::TileWeights};
 use statics::GRID;
 
 pub struct TileInfo {
@@ -8,7 +8,7 @@ pub struct TileInfo {
 
 
 
-pub fn pig_generate(radius: u32, starting_pos: Coord) -> Vec<TileInfo> {
+pub fn pig_generate(radius: u32, starting_pos: Coord, adjacency_rules: AdjacencyRules, tile_weights: TileWeights) -> Vec<TileInfo> {
     let ret = Vec::new();
 
     let mut grid = GRID.lock().unwrap();
@@ -19,8 +19,10 @@ pub fn pig_generate(radius: u32, starting_pos: Coord) -> Vec<TileInfo> {
 
     let current_tile = grid.cell_at(&starting_pos);
 
+    // notes for later 
+    // for every Some tile in the radius, propogate it's effects to every newly initialized tile.
     'propogate: loop {
-
+         
     }
 
     ret
