@@ -70,7 +70,14 @@ impl PhantomGrid {
     }
 
     pub fn with_least_options(&self) -> Coord {
-        self.
+        let iter = self.cells.iter().filter(|c| {
+            !c.is_collapsed()
+        });
+
+        // optimize later for it to return early if it hits a cell with two or 1.
+        for c in iter {
+            c.possible_indicies().count()
+        }
     }
 
     pub fn print_state(&self) {

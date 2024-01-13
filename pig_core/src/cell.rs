@@ -31,8 +31,15 @@ impl Cell {
     pub fn tile_index(&self) -> TileIndex {
         self.tile_idx
     }
+    pub fn is_collapsed(&self) -> bool {
+        self.is_collapsed
+    }
     pub fn collapse(&mut self) {
         todo!();
+    }
+    pub fn possible_indicies<'a>(&'a self) -> impl Iterator<Item = TileIndex> + 'a {
+        self.possible_tiles.iter().enumerate().filter(|(_, b)| **b)
+            .map(|(i, _)| i as TileIndex)
     }
 
 }
