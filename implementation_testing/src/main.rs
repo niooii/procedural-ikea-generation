@@ -1,5 +1,6 @@
 // use wfc::{self, AdjacencyRules, FrequencyHints, TileIndex};
-use pig_core;
+use pig_core::{self, phantom_grid::PhantomGrid, cell::Cell};
+use crate::pig_core::coord::Coord;
 
 fn main() {
     // let frequency_hints = FrequencyHints::new(
@@ -63,5 +64,12 @@ fn main() {
 
     // println!("{output:?}");
 
-    
+    let mut grid = PhantomGrid::new();
+
+    grid.add_tile(Cell::new(Coord::new(2, 2)));
+    grid.add_tile(Cell::new(Coord::new(2, 1)));
+    grid.add_tile(Cell::new(Coord::new(-3, -5)));
+    grid.add_tile(Cell::new(Coord::new(-2, -2)));
+
+    grid.print_state();
 }
