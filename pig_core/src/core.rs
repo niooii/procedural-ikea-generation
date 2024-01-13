@@ -13,11 +13,11 @@ pub fn pig_generate(radius: u32, starting_pos: Coord) -> Vec<TileInfo> {
 
     let mut grid = GRID.lock().unwrap();
 
-    if grid.tile_at(&starting_pos).is_none() {
+    if grid.cell_at(&starting_pos).is_none() {
         grid.add_tile(Cell::with_tile_idx(starting_pos, EMPTY)).unwrap();
     }
 
-    let current_tile = grid.tile_at(&starting_pos);
+    let current_tile = grid.cell_at(&starting_pos);
 
     'propogate: loop {
 

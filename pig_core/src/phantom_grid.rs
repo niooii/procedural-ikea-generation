@@ -1,54 +1,68 @@
 // not really a grid. 
 
-use std::os::linux::raw::stat;
-
+use crate::TileIndex;
 use crate::{cell::Cell, Direction, coord::Coord};
 use crate::error::{Result, PigError};
 
 pub struct PhantomGrid {
-    tiles: Vec<Cell>
+    cells: Vec<Cell>
 }
 
 impl PhantomGrid {
     pub fn new() -> Self {
         Self {
-            tiles: Vec::new()
+            cells: Vec::new()
         }
     }
 
     pub fn add_tile(&mut self, tile: Cell) -> Result<()> {
-        if self.tile_at(tile.coord()).is_some() {
+        if self.cell_at(tile.coord()).is_some() {
             return Err(PigError::TileAddError { why: "uh huhuhuh uheu heh ehhe".to_string() });
         }
-        self.tiles.push(tile);
+        self.cells.push(tile);
 
         Ok(())
     }
 
-    pub fn tile_at(&self, tile_coord: &Coord) -> Option<&Cell> {
-        self.tiles.iter().find(|t| *t.coord() == *tile_coord)
+    pub fn cell_at(&self, tile_coord: &Coord) -> Option<&Cell> {
+        self.cells.iter().find(|t| *t.coord() == *tile_coord)
     }
 
-    pub fn tile_at_mut(&mut self, tile_coord: &Coord) -> Option<&mut Cell> {
-        self.tiles.iter_mut().find(|t| *t.coord() == *tile_coord)
+    pub fn cell_at_mut(&mut self, tile_coord: &Coord) -> Option<&mut Cell> {
+        self.cells.iter_mut().find(|t| *t.coord() == *tile_coord)
     }
 
     pub fn adjacent(&self, tile_coord: &Coord, dir: Direction) -> Option<&Cell> {
         match dir {
-            Direction::UP => self.tile_at(&Coord::new(tile_coord.x(), tile_coord.y() + 1)),
-            Direction::DOWN => self.tile_at(&Coord::new(tile_coord.x(), tile_coord.y() - 1)),
-            Direction::LEFT => self.tile_at(&Coord::new(tile_coord.x() - 1, tile_coord.y())),
-            Direction::RIGHT => self.tile_at(&Coord::new(tile_coord.x() + 1, tile_coord.y())),
+            Direction::UP => self.cell_at(&Coord::new(tile_coord.x(), tile_coord.y() + 1)),
+            Direction::DOWN => self.cell_at(&Coord::new(tile_coord.x(), tile_coord.y() - 1)),
+            Direction::LEFT => self.cell_at(&Coord::new(tile_coord.x() - 1, tile_coord.y())),
+            Direction::RIGHT => self.cell_at(&Coord::new(tile_coord.x() + 1, tile_coord.y())),
         }
     }
 
     pub fn adjacent_mut(&mut self, tile_coord: Coord, dir: Direction) -> Option<&mut Cell> {
         match dir {
-            Direction::UP => self.tile_at_mut(&Coord::new(tile_coord.x(), tile_coord.y() + 1)),
-            Direction::DOWN => self.tile_at_mut(&Coord::new(tile_coord.x(), tile_coord.y() - 1)),
-            Direction::LEFT => self.tile_at_mut(&Coord::new(tile_coord.x() - 1, tile_coord.y())),
-            Direction::RIGHT => self.tile_at_mut(&Coord::new(tile_coord.x() + 1, tile_coord.y())),
+            Direction::UP => self.cell_at_mut(&Coord::new(tile_coord.x(), tile_coord.y() + 1)),
+            Direction::DOWN => self.cell_at_mut(&Coord::new(tile_coord.x(), tile_coord.y() - 1)),
+            Direction::LEFT => self.cell_at_mut(&Coord::new(tile_coord.x() - 1, tile_coord.y())),
+            Direction::RIGHT => self.cell_at_mut(&Coord::new(tile_coord.x() + 1, tile_coord.y())),
         }
+    }
+    
+    pub fn radius_iter<'a>(&'a self, radius: u32, from_pos: Coord) -> impl Iterator<Item = Option<&Cell>> + 'a {
+        let radius: i32 = radius as i32;
+        // self.cells.iter().filter(|c| {
+        //     let coord = c.coord();
+        //     coord.x() > from_pos.x() - radius && coord.x() < from_pos.x() + radius &&
+        //     coord.y() < from_pos.y() + radius && coord.y() > from_pos.y() - radius
+        // }).into_iter()
+
+        (from_pos.y() - radius..=from_pos.y() + radius).flat_map(move |y| {
+            (from_pos.x() - radius..=from_pos.x() + radius).map(move |x| {
+                self.cell_at(&Coord::new(x, y))
+            })
+        })
     }
 
     pub fn print_state(&self) {
@@ -59,18 +73,18 @@ impl PhantomGrid {
         let mut left = 0;
         let mut right = 0;
 
-        for tile in &self.tiles {
-            if tile.coord().y() > top {
-                top = tile.coord().y();
+        for cell in &self.cells {
+            if cell.coord().y() > top {
+                top = cell.coord().y();
             }
-            if tile.coord().y() < bottom {
-                bottom = tile.coord().y();
+            if cell.coord().y() < bottom {
+                bottom = cell.coord().y();
             }
-            if tile.coord().x() > right {
-                right = tile.coord().x();
+            if cell.coord().x() > right {
+                right = cell.coord().x();
             }
-            if tile.coord().x() < left {
-                left = tile.coord().x();
+            if cell.coord().x() < left {
+                left = cell.coord().x();
             }
         }
 
@@ -78,7 +92,7 @@ impl PhantomGrid {
 
         for y in (bottom..=top).rev() {
             for x in left..=right {
-                let tile = self.tile_at(&Coord::new(x, y));
+                let tile = self.cell_at(&Coord::new(x, y));
 
                 if let Some(t) = tile {
                     state_str = format!("{state_str}{}", t.tile_index());

@@ -24,4 +24,5 @@ impl Cell {
     pub fn tile_index(&self) -> TileIndex {
         self.tile_idx
     }
+
 }
