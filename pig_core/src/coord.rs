@@ -1,5 +1,7 @@
+use crate::Direction;
 
-#[derive(Clone, Copy, Debug)]
+
+#[derive(Clone, Copy, Debug, Eq, Hash)]
 pub struct Coord {
     x: i32,
     y: i32
@@ -19,6 +21,15 @@ impl Coord {
 
     pub fn y(&self) -> i32 {
         self.y
+    }
+
+    pub fn translated(&self, dir: Direction) -> Self {
+        match dir {
+            Direction::UP => Coord::new(self.x(), self.y() + 1),
+            Direction::DOWN => Coord::new(self.x(), self.y() - 1),
+            Direction::LEFT => Coord::new(self.x() - 1, self.y()),
+            Direction::RIGHT => Coord::new(self.x() + 1, self.y()),
+        }
     }
 }
 
