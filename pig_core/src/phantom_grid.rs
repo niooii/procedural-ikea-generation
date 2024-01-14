@@ -117,6 +117,7 @@ impl PhantomGrid {
         let mut right = 0;
 
         for cell in &self.cells {
+            // println!("{:?}", cell);
             if cell.coord().y() > top {
                 top = cell.coord().y();
             }

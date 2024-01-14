@@ -13,7 +13,7 @@ fn main() -> Result<()> {
         1.0, // RIGHT_WALL
         1.0, // UP_WALL
         1.0, // DOWN_WALL
-        1.0, // EMPTY
+        2.0, // EMPTY
         0.0, // NONE
     ]);
     
@@ -61,7 +61,7 @@ fn main() -> Result<()> {
     allow!(adjacency_rules, RIGHT_WALL, UP, RIGHT_WALL);
     allow!(adjacency_rules, RIGHT_WALL, DOWN, RIGHT_WALL);
 
-    pig_generate(10, Coord::new(0, 0), adjacency_rules, tile_weights);
+    pig_generate(20, Coord::new(0, 0), adjacency_rules.clone(), tile_weights.clone());
 
     Ok(())
 }

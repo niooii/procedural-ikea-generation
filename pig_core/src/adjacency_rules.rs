@@ -10,12 +10,14 @@ macro_rules! allow {
     };
 }
 
+#[derive(Clone, Copy)]
 pub struct Rule {
     from: TileIndex,
     to: TileIndex,
     in_dir: Direction
 }
 
+#[derive(Clone)]
 pub struct AdjacencyRules {
     rules: Vec<Rule>
 }

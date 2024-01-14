@@ -21,11 +21,12 @@ pub fn pig_generate(iters: u32, starting_pos: Coord, adjacency_rules: AdjacencyR
         grid.add_cell(Cell::with_tile_idx(starting_pos, EMPTY)).unwrap();
     }
 
-    const SEARCH_RADIUS: u32 = 8;
+    let mut SEARCH_RADIUS: u32 = 5;
 
     let mut new_additions = Vec::<TileInfo>::new();
 
     for _ in 0..iters {
+        SEARCH_RADIUS += 1;
         // sometimes the initialized tiles overlap, but it should be following the same adjacency rules anyways so we
         // dont have to worry about this.
         let mut already_initialized: HashSet<Coord> = HashSet::new();

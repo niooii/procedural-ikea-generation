@@ -4,6 +4,7 @@ use rand::distributions::{WeightedIndex, Distribution};
 
 use crate::{TileIndex, tile_types::NONE};
 
+#[derive(Clone)]
 pub struct TileWeights {
     weights: Vec<f32>
 }
