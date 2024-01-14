@@ -10,3 +10,15 @@ pub const TOP_WALL: TileIndex = 6;
 pub const BOTTOM_WALL: TileIndex = 7;
 pub const EMPTY: TileIndex = 8;
 pub const NONE: TileIndex = 9;
+
+pub const ALL_TYPES: [TileIndex; 9] = [
+    BOTTOM_LEFT_CORNER,
+    BOTTOM_RIGHT_CORNER,
+    TOP_LEFT_CORNER,
+    TOP_RIGHT_CORNER,
+    LEFT_WALL,
+    RIGHT_WALL,
+    TOP_WALL,
+    BOTTOM_WALL,
+    EMPTY,
+];

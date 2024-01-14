@@ -30,10 +30,18 @@ fn main() -> Result<()> {
     allow!(adjacency_rules, EMPTY, LEFT, EMPTY);
     allow!(adjacency_rules, EMPTY, RIGHT, EMPTY);
     
-    allow!(adjacency_rules, EMPTY, RIGHT, RIGHT_WALL);
-    allow!(adjacency_rules, EMPTY, LEFT, LEFT_WALL);
-    allow!(adjacency_rules, EMPTY, UP, TOP_WALL);
-    allow!(adjacency_rules, EMPTY, DOWN, BOTTOM_WALL);
+    // allow empty for every FUCKING tile type.
+    for tile_type in ALL_TYPES {
+        allow!(adjacency_rules, EMPTY, UP, tile_type);
+        allow!(adjacency_rules, EMPTY, DOWN, tile_type);
+        allow!(adjacency_rules, EMPTY, LEFT, tile_type);
+        allow!(adjacency_rules, EMPTY, RIGHT, tile_type);
+
+        allow!(adjacency_rules, tile_type, UP, EMPTY);
+        allow!(adjacency_rules, tile_type, DOWN, EMPTY);
+        allow!(adjacency_rules, tile_type, LEFT, EMPTY);
+        allow!(adjacency_rules, tile_type, RIGHT, EMPTY);
+    }
 
     // corner wall interactions
     allow!(adjacency_rules, TOP_LEFT_CORNER, DOWN, LEFT_WALL);
