@@ -45,6 +45,8 @@ name = "implementation_testing"
 version = "0.1.0"
 dependencies = [
  "pig_core",
+ "serde",
+ "serde_json",
  "wfc",
 ]
 

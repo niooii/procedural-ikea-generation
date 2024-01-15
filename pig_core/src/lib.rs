@@ -29,3 +29,4 @@ pub mod adjacency_rules;
 pub mod error;
 pub mod tile_weights;
 pub mod tile_types;
+pub mod ffi;

@@ -19,6 +19,10 @@ impl PhantomGrid {
         }
     }
 
+    pub fn clear(&mut self) {
+        self.cells.clear();
+    }
+
     pub fn add_cell(&mut self, cell: Cell) -> Result<()> {
         if self.cells.contains_key(cell.coord()) {
             return Err(PigError::TileAddError { why: format!("cell already exists at {:?} idiot", cell.coord()) });

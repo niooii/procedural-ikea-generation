@@ -1,7 +1,9 @@
+use serde::{Serialize, Deserialize};
+
 use crate::Direction;
 
 
-#[derive(Clone, Copy, Debug, Eq, Hash)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Serialize, Deserialize)]
 pub struct Coord {
     x: i32,
     y: i32

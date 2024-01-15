@@ -1,22 +1,35 @@
 use std::collections::HashSet;
 
-use crate::{TileIndex, coord::Coord, statics, cell::Cell, tile_types::*, adjacency_rules::AdjacencyRules, tile_weights::TileWeights, Direction};
+use crate::{TileIndex, coord::Coord, statics, cell::Cell, tile_types::*, adjacency_rules::AdjacencyRules, tile_weights::TileWeights, Direction, error::PigError};
+use serde::Serialize;
 use statics::GRID;
 use rand::seq::SliceRandom; 
 
+#[derive(Serialize)]
 pub struct TileInfo {
     tile_idx: TileIndex,
     world_space_position: Coord 
 }
 
-pub fn pig_generate(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights) -> Vec<TileInfo> {
+#[derive(Serialize)]
+pub struct TileInfoWrapper {
+    data: Vec<TileInfo>
+}
+
+pub fn clear_grid() {
+    let mut grid = GRID.lock().unwrap();
+
+    grid.clear();
+}
+
+pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights) -> Result<TileInfoWrapper, PigError> {
     let mut ret = Vec::new();
 
     let mut grid = GRID.lock().unwrap();
 
     // if cell doesn't exist, make it exist. 
     if grid.cell_at(&starting_pos).is_none() {
-        grid.add_cell(Cell::with_tile_idx(starting_pos, EMPTY)).unwrap();
+        grid.add_cell(Cell::with_tile_idx(starting_pos, EMPTY))?;
     }
 
     let mut SEARCH_RADIUS: u32 = 5;
@@ -87,15 +100,17 @@ pub fn pig_generate(iters: u32, starting_pos: Coord, adjacency_rules: &Adjacency
 
         // to satisfy rust borrow checker, we process after each iter from the new_additions vec.
         for change in new_additions.iter() {
-            grid.add_cell(Cell::with_tile_idx(change.world_space_position, change.tile_idx)).unwrap();
+            grid.add_cell(Cell::with_tile_idx(change.world_space_position, change.tile_idx))?;
         }
 
        
-        new_additions.clear();
         ret.append(&mut new_additions);
     }
 
-    grid.print_state(true);
+    // grid.print_state(true);
+    
+    let wrapper = TileInfoWrapper { data: ret };
+    
 
-    ret
+    Ok(wrapper)
 }

@@ -1,10 +1,11 @@
 use std::collections::HashSet;
 
 use rand::distributions::{WeightedIndex, Distribution};
+use serde::{Serialize, Deserialize};
 
 use crate::{TileIndex, tile_types::NONE};
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize)]
 pub struct TileWeights {
     weights: Vec<f32>
 }
