@@ -1,3 +1,5 @@
+use std::{collections::hash_map::DefaultHasher, hash::{Hasher, Hash}};
+
 use serde::{Serialize, Deserialize};
 
 use crate::Direction;
@@ -32,6 +34,13 @@ impl Coord {
             Direction::LEFT => Coord::new(self.x() - 1, self.y()),
             Direction::RIGHT => Coord::new(self.x() + 1, self.y()),
         }
+    }
+
+    pub fn hash_coordinate(&self, seed: u64) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        self.hash(&mut hasher);
+        seed.hash(&mut hasher);
+        hasher.finish()
     }
 }
 

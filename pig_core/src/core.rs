@@ -92,6 +92,8 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
                     allowed_tiles = allowed_tiles.intersection(&allowed_indices).copied().collect();
                 }
 
+                let mut seeded_rng = ChaCha20Rng::seed_from_u64(target.hash_coordinate(seed));
+
                 let chosen_tile = tile_weights.from_allowed_indices(allowed_tiles, &mut seeded_rng);
                 
                 // println!("finished cell {:?} in direction {:?} from original pos {:?}", target, dir, original_coord);
