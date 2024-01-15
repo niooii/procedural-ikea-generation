@@ -9,9 +9,7 @@ pub struct TileInfo {
     world_space_position: Coord 
 }
 
-
-
-pub fn pig_generate(iters: u32, starting_pos: Coord, adjacency_rules: AdjacencyRules, tile_weights: TileWeights) -> Vec<TileInfo> {
+pub fn pig_generate(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights) -> Vec<TileInfo> {
     let mut ret = Vec::new();
 
     let mut grid = GRID.lock().unwrap();
@@ -25,16 +23,18 @@ pub fn pig_generate(iters: u32, starting_pos: Coord, adjacency_rules: AdjacencyR
 
     let mut new_additions = Vec::<TileInfo>::new();
 
+    // sometimes the initialized tiles overlap, but it should be following the same adjacency rules anyways so we
+    // dont have to worry about this.
+    let mut already_initialized: HashSet<Coord> = HashSet::new();
+
     for _ in 0..iters {
         SEARCH_RADIUS += 1;
-        // sometimes the initialized tiles overlap, but it should be following the same adjacency rules anyways so we
-        // dont have to worry about this.
-        let mut already_initialized: HashSet<Coord> = HashSet::new();
+        
         // for any existing cells within a radius of the player, that aren't surrounded by tiles.
         for cell in grid.radius_iter(SEARCH_RADIUS, starting_pos)
         .filter(|c| {
             if let Some(cell) = c {
-                grid.is_surrounded_by_cells(cell.coord())
+                !grid.is_surrounded_by_cells(cell.coord())
             } else {
                 false
             }
@@ -91,7 +91,7 @@ pub fn pig_generate(iters: u32, starting_pos: Coord, adjacency_rules: AdjacencyR
         }
 
        
-
+        new_additions.clear();
         ret.append(&mut new_additions);
     }
 

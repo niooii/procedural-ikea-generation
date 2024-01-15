@@ -1,36 +1,40 @@
 // not really a grid. 
 
+use std::cell;
+use std::collections::HashMap;
+
 use crate::{TileIndex, tile_types};
 use crate::{cell::Cell, Direction, coord::Coord};
 use crate::error::{Result, PigError};
 use crate::tile_types::*;
 
 pub struct PhantomGrid {
-    cells: Vec<Cell>
+    cells: HashMap<Coord, Cell>
 }
 
 impl PhantomGrid {
     pub fn new() -> Self {
         Self {
-            cells: Vec::new()
+            cells: HashMap::new()
         }
     }
 
     pub fn add_cell(&mut self, cell: Cell) -> Result<()> {
-        if self.cell_at(cell.coord()).is_some() {
+        if self.cells.contains_key(cell.coord()) {
             return Err(PigError::TileAddError { why: format!("cell already exists at {:?} idiot", cell.coord()) });
         }
-        self.cells.push(cell);
+        
+        self.cells.insert(cell.coord().clone(), cell);
 
         Ok(())
     }
 
     pub fn cell_at(&self, cell_coord: &Coord) -> Option<&Cell> {
-        self.cells.iter().find(|t| *t.coord() == *cell_coord)
+        self.cells.get(cell_coord)
     }
 
     pub fn cell_at_mut(&mut self, cell_coord: &Coord) -> Option<&mut Cell> {
-        self.cells.iter_mut().find(|t| *t.coord() == *cell_coord)
+        self.cells.get_mut(cell_coord)
     }
 
     pub fn adjacent(&self, cell_coord: &Coord, dir: Direction) -> Option<&Cell> {
@@ -53,11 +57,6 @@ impl PhantomGrid {
     
     pub fn radius_iter<'a>(&'a self, radius: u32, from_pos: Coord) -> impl Iterator<Item = Option<&Cell>> + 'a {
         let radius: i32 = radius as i32;
-        // self.cells.iter().filter(|c| {
-        //     let coord = c.coord();
-        //     coord.x() > from_pos.x() - radius && coord.x() < from_pos.x() + radius &&
-        //     coord.y() < from_pos.y() + radius && coord.y() > from_pos.y() - radius
-        // }).into_iter()
 
         (from_pos.y() - radius..=from_pos.y() + radius).flat_map(move |y| {
             (from_pos.x() - radius..=from_pos.x() + radius).map(move |x| {
@@ -71,7 +70,7 @@ impl PhantomGrid {
         
         cells.iter().find(|(c, _)| {
             c.is_none()
-        }).is_some()
+        }).is_none()
     }
 
     pub fn surrounding_cells(&self, cell_pos: &Coord) -> Vec<(Option<&Cell>, Direction)> {
@@ -116,7 +115,7 @@ impl PhantomGrid {
         let mut left = 0;
         let mut right = 0;
 
-        for cell in &self.cells {
+        for (_key, cell) in &self.cells {
             // println!("{:?}", cell);
             if cell.coord().y() > top {
                 top = cell.coord().y();
