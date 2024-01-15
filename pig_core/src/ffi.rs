@@ -2,7 +2,7 @@ use std::ffi::{c_char, CStr, CString};
 
 use serde::{Deserialize, Serialize};
 
-use crate::{core::{pig_generate_internal, clear_grid}, adjacency_rules::AdjacencyRules, tile_weights::{TileWeights, self}, coord::Coord, statics::FFI_STATUS_MESSAGE};
+use crate::{core::{pig_generate_internal, clear_grid}, adjacency_rules::AdjacencyRules, tile_weights::{TileWeights, self}, coord::Coord};
 
 // returns json
 
@@ -53,7 +53,6 @@ pub extern "C" fn ffi_ptr_parse_test(json_str: *const c_char) -> *mut c_char {
     }
     
 }
-
 
 #[no_mangle]
 pub extern "C" fn ffi_test_add_three(x: i32) -> i32 {

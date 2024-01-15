@@ -6,7 +6,6 @@ use statics::GRID;
 
 use rand_chacha::ChaCha20Rng;
 use rand_chacha::rand_core::SeedableRng;
-use rand::Rng;
 
 #[derive(Serialize)]
 pub struct TileInfo {
@@ -26,8 +25,6 @@ pub fn clear_grid() {
 }
 
 pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights, seed: u64, starting_search_radius: u32) -> Result<TileInfoWrapper, PigError> {
-    let mut seeded_rng = ChaCha20Rng::seed_from_u64(seed as u64);
-
     let mut ret = Vec::new();
 
     let mut grid = GRID.lock().unwrap();
@@ -79,6 +76,7 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
                     TOP_WALL,
                     BOTTOM_WALL,
                     EMPTY,
+                    EXIT,
                     // NONE always allowed
                     // NONE,
                 ].into();

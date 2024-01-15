@@ -146,6 +146,7 @@ impl PhantomGrid {
                 LEFT_WALL => '▏',
                 RIGHT_WALL => '▕',
                 EMPTY => '░',
+                EXIT => 'N',
                 NONE => '◇',
                 _ => unreachable!()
             }
