@@ -1,6 +1,7 @@
 use std::collections::HashSet;
 
 use rand::distributions::{WeightedIndex, Distribution};
+use rand_chacha::ChaCha20Rng;
 use serde::{Serialize, Deserialize};
 
 use crate::{TileIndex, tile_types::NONE};
@@ -17,7 +18,7 @@ impl TileWeights {
         }
     }
 
-    pub fn from_allowed_indices(&self, allowed: HashSet<TileIndex>) -> TileIndex {
+    pub fn from_allowed_indices(&self, allowed: HashSet<TileIndex>, seeded_rng: &mut ChaCha20Rng) -> TileIndex {
         // println!("allowed: {:?}", allowed);
         let weights = self.weights.iter().enumerate().map(|(i, w)| {
             if allowed.contains(&(i as u8)) {
@@ -33,7 +34,6 @@ impl TileWeights {
             return NONE;
         }
 
-        let mut rng = rand::thread_rng();
-        weighted_index_result.unwrap().sample(&mut rng) as u8
+        weighted_index_result.unwrap().sample(seeded_rng) as u8
     }
 }

@@ -10,7 +10,9 @@ use crate::{core::{pig_generate_internal, clear_grid}, adjacency_rules::Adjacenc
 pub struct InputData {
     pub iters: u32,
     pub coord: Coord,
-    pub tile_weights: Vec<f32>
+    pub tile_weights: Vec<f32>,
+    pub seed: u64,
+    pub search_radius: u32
 }
 
 #[no_mangle]
@@ -23,7 +25,7 @@ pub extern "C" fn pig_generate(json_str: *const c_char) -> *mut c_char {
     
     let tile_weights = TileWeights::new(input_data.tile_weights);
 
-    let tile_infos = pig_generate_internal(input_data.iters, input_data.coord, &adjacency_rules, &tile_weights).unwrap();
+    let tile_infos = pig_generate_internal(input_data.iters, input_data.coord, &adjacency_rules, &tile_weights, input_data.seed, input_data.search_radius).unwrap();
 
     let json_value = serde_json::to_string(&tile_infos).unwrap();
     

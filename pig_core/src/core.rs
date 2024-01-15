@@ -3,7 +3,10 @@ use std::collections::HashSet;
 use crate::{TileIndex, coord::Coord, statics, cell::Cell, tile_types::*, adjacency_rules::AdjacencyRules, tile_weights::TileWeights, Direction, error::PigError};
 use serde::Serialize;
 use statics::GRID;
-use rand::seq::SliceRandom; 
+
+use rand_chacha::ChaCha20Rng;
+use rand_chacha::rand_core::SeedableRng;
+use rand::Rng;
 
 #[derive(Serialize)]
 pub struct TileInfo {
@@ -22,7 +25,9 @@ pub fn clear_grid() {
     grid.clear();
 }
 
-pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights) -> Result<TileInfoWrapper, PigError> {
+pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights, seed: u64, starting_search_radius: u32) -> Result<TileInfoWrapper, PigError> {
+    let mut seeded_rng = ChaCha20Rng::seed_from_u64(seed as u64);
+
     let mut ret = Vec::new();
 
     let mut grid = GRID.lock().unwrap();
@@ -32,7 +37,7 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
         grid.add_cell(Cell::with_tile_idx(starting_pos, EMPTY))?;
     }
 
-    let mut SEARCH_RADIUS: u32 = 5;
+    let mut SEARCH_RADIUS: u32 = starting_search_radius;
 
     let mut new_additions = Vec::<TileInfo>::new();
 
@@ -87,7 +92,7 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
                     allowed_tiles = allowed_tiles.intersection(&allowed_indices).copied().collect();
                 }
 
-                let chosen_tile = tile_weights.from_allowed_indices(allowed_tiles);
+                let chosen_tile = tile_weights.from_allowed_indices(allowed_tiles, &mut seeded_rng);
                 
                 // println!("finished cell {:?} in direction {:?} from original pos {:?}", target, dir, original_coord);
                 already_initialized.insert(target);

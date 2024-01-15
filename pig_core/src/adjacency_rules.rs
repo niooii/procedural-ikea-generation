@@ -114,13 +114,18 @@ impl AdjacencyRules {
             to
         });
     }
+    
     pub fn allowed_tile_indices(&self, from_tile: TileIndex, in_dir: Direction) -> HashSet<TileIndex> {
         let mut allowed_tiles = HashSet::new();
 
-        for rule in self.rules.get(&from_tile).unwrap() {
-            if rule.in_dir == in_dir {
-                allowed_tiles.insert(rule.to);
-                // println!("found allowed rule: {} to {} in direction {:?}", rule.from, rule.to, rule.in_dir);
+        let rules_vec = self.rules.get(&from_tile);
+
+        if let Some(v) = rules_vec {
+            for rule in v {
+                if rule.in_dir == in_dir {
+                    allowed_tiles.insert(rule.to);
+                    // println!("found allowed rule: {} to {} in direction {:?}", rule.from, rule.to, rule.in_dir);
+                }
             }
         }
 
