@@ -19,12 +19,13 @@ cfg-if = "1.0.0"
 [build]
 build = "build.rs"
 
-# # For the "special" target
-# [target.'cfg(wasm32_unknown_emscripten)'.lib]
+
+# cargo build --target=wasm32-unknown-emscripten --release
 # crate-type = ["staticlib"]
 
-# # For the "special" target
-# [target.'cfg(not(wasm32_unknown_emscripten))'.lib]
+
+# cargo build --release (on windows)
 # crate-type = ["cdylib"]
+
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["cdylib"]

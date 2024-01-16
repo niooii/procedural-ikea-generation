@@ -11,6 +11,7 @@ pub struct InputData {
     pub iters: u32,
     pub coord: Coord,
     pub tile_weights: Vec<f32>,
+    pub tile_model_weights: Vec<f32>,
     pub seed: u64,
     pub search_radius: u32
 }
@@ -24,8 +25,9 @@ pub extern "C" fn pig_generate(json_str: *const c_char) -> *mut c_char {
     let input_data: InputData = serde_json::from_str(&json_string).expect("Failed to deserialize JSON");
     
     let tile_weights = TileWeights::new(input_data.tile_weights);
+    let tile_model_weights = TileWeights::new(input_data.tile_model_weights);
 
-    let tile_infos = pig_generate_internal(input_data.iters, input_data.coord, &adjacency_rules, &tile_weights, input_data.seed, input_data.search_radius).unwrap();
+    let tile_infos = pig_generate_internal(input_data.iters, input_data.coord, &adjacency_rules, &tile_weights, &tile_model_weights, input_data.seed, input_data.search_radius).unwrap();
 
     let json_value = serde_json::to_string(&tile_infos).unwrap();
     
