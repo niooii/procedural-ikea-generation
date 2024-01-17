@@ -49,6 +49,19 @@ impl AdjacencyRules {
             allow!(adjacency_rules, tile_type, RIGHT, EMPTY);
         }
 
+        // allow exit next to every tile too, just make the chance astronomicaly smalkl
+        for tile_type in ALL_TYPES {
+            allow!(adjacency_rules, EXIT, UP, tile_type);
+            allow!(adjacency_rules, EXIT, DOWN, tile_type);
+            allow!(adjacency_rules, EXIT, LEFT, tile_type);
+            allow!(adjacency_rules, EXIT, RIGHT, tile_type);
+
+            allow!(adjacency_rules, tile_type, UP, EXIT);
+            allow!(adjacency_rules, tile_type, DOWN, EXIT);
+            allow!(adjacency_rules, tile_type, LEFT, EXIT);
+            allow!(adjacency_rules, tile_type, RIGHT, EXIT);
+        }
+
         // Corner corner interactions
         allow!(adjacency_rules, TOP_LEFT_CORNER, RIGHT, TOP_RIGHT_CORNER); // normal
         allow!(adjacency_rules, TOP_RIGHT_CORNER, LEFT, TOP_LEFT_CORNER); // inverted

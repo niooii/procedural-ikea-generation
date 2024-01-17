@@ -6,12 +6,12 @@ use statics::GRID;
 
 use rand_chacha::ChaCha20Rng;
 use rand_chacha::rand_core::SeedableRng;
-use rand::Rng;
 
 #[derive(Serialize)]
 pub struct TileInfo {
     tile_idx: TileIndex,
-    world_space_position: Coord 
+    tile_model_idx: u8,
+    grid_space_position: Coord 
 }
 
 #[derive(Serialize)]
@@ -25,9 +25,7 @@ pub fn clear_grid() {
     grid.clear();
 }
 
-pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights, seed: u64, starting_search_radius: u32) -> Result<TileInfoWrapper, PigError> {
-    let mut seeded_rng = ChaCha20Rng::seed_from_u64(seed as u64);
-
+pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights, tile_model_weights: &TileWeights, seed: u64, starting_search_radius: u32, increment_radius: bool) -> Result<TileInfoWrapper, PigError> {
     let mut ret = Vec::new();
 
     let mut grid = GRID.lock().unwrap();
@@ -79,6 +77,7 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
                     TOP_WALL,
                     BOTTOM_WALL,
                     EMPTY,
+                    EXIT,
                     // NONE always allowed
                     // NONE,
                 ].into();
@@ -95,19 +94,21 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
                 let mut seeded_rng = ChaCha20Rng::seed_from_u64(target.hash_coordinate(seed));
 
                 let chosen_tile = tile_weights.from_allowed_indices(allowed_tiles, &mut seeded_rng);
+                let chosen_tile_model_idx = tile_model_weights.from_all(&mut seeded_rng);
                 
                 // println!("finished cell {:?} in direction {:?} from original pos {:?}", target, dir, original_coord);
                 already_initialized.insert(target);
                 new_additions.push(TileInfo {
                     tile_idx: chosen_tile,
-                    world_space_position: target
+                    tile_model_idx: chosen_tile_model_idx,
+                    grid_space_position: target
                 })
             }
         }
 
         // to satisfy rust borrow checker, we process after each iter from the new_additions vec.
         for change in new_additions.iter() {
-            grid.add_cell(Cell::with_tile_idx(change.world_space_position, change.tile_idx))?;
+            grid.add_cell(Cell::with_tile_idx(change.grid_space_position, change.tile_idx))?;
         }
 
        
@@ -120,4 +121,12 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
     
 
     Ok(wrapper)
+}
+
+pub fn pig_remove_internal(coords: &Vec<Coord>) {
+    let mut grid = GRID.lock().unwrap();
+
+    for c in coords {
+        grid.remove_cell(c);
+    }
 }

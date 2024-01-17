@@ -19,7 +19,6 @@ impl TileWeights {
     }
 
     pub fn from_allowed_indices(&self, allowed: HashSet<TileIndex>, seeded_rng: &mut ChaCha20Rng) -> TileIndex {
-        // println!("allowed: {:?}", allowed);
         let weights = self.weights.iter().enumerate().map(|(i, w)| {
             if allowed.contains(&(i as u8)) {
                 w
@@ -29,6 +28,17 @@ impl TileWeights {
         }).collect::<Vec<&f32>>();
 
         let weighted_index_result = WeightedIndex::new(weights);
+
+        if let Err(e) = weighted_index_result {
+            return NONE;
+        }
+
+        weighted_index_result.unwrap().sample(seeded_rng) as u8
+    }
+
+    pub fn from_all(&self, seeded_rng: &mut ChaCha20Rng) -> TileIndex {
+
+        let weighted_index_result = WeightedIndex::new(self.weights.iter().copied());
 
         if let Err(e) = weighted_index_result {
             return NONE;

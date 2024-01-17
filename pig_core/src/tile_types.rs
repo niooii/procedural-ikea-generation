@@ -9,9 +9,10 @@ pub const RIGHT_WALL: TileIndex = 5;
 pub const TOP_WALL: TileIndex = 6;
 pub const BOTTOM_WALL: TileIndex = 7;
 pub const EMPTY: TileIndex = 8;
-pub const NONE: TileIndex = 9;
+pub const EXIT: TileIndex = 9;
+pub const NONE: TileIndex = 10;
 
-pub const ALL_TYPES: [TileIndex; 9] = [
+pub const ALL_TYPES: [TileIndex; 10] = [
     BOTTOM_LEFT_CORNER,
     BOTTOM_RIGHT_CORNER,
     TOP_LEFT_CORNER,
@@ -21,4 +22,5 @@ pub const ALL_TYPES: [TileIndex; 9] = [
     TOP_WALL,
     BOTTOM_WALL,
     EMPTY,
+    EXIT,
 ];
