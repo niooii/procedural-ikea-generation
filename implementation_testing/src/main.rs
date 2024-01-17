@@ -1,7 +1,6 @@
 // use std::time::Instant;
 
-// // use wfc::{self, AdjacencyRules, FrequencyHints, TileIndex};
-// use pig_core::{self, phantom_grid::PhantomGrid, cell::Cell, error::Result, tile_weights::TileWeights, adjacency_rules::AdjacencyRules, tile_types::*, Direction::*, ffi::InputData, core::pig_generate_internal};
+// use pig_core::{self, phantom_grid::PhantomGrid, cell::Cell, error::Result, tile_weights::TileWeights, adjacency_rules::AdjacencyRules, tile_types::*, Direction::*, ffi::GenerateInputData, core::pig_generate_internal};
 // use crate::pig_core::coord::Coord;
 // use pig_core::allow;
 
@@ -16,8 +15,16 @@
 //         1.0, // RIGHT_WALL
 //         1.0, // UP_WALL
 //         1.0, // DOWN_WALL
-//         2.0, // EMPTY
+//         1.0, // EMPTY
+//         0.011, // EXIT
 //         0.0, // NONE
+//     ]);
+
+//     let tile_model_weights = TileWeights::new(vec![
+//         1.0, // BOTTOM_LEFT_CORNER
+//         1.0, // BOTTOM_RIGHT_CORNER
+//         1.0, // TOP_LEFT_CORNER
+//         1.0, // TOP_RIGHT_CORNER
 //     ]);
     
 //     let mut adjacency_rules = AdjacencyRules::default();
@@ -31,23 +38,32 @@
     
 
 //     for n in 0..1 {
-//         pig_generate_internal(20, Coord::new(n * 20, 0), &adjacency_rules, &tile_weights)?;
+//         pig_generate_internal(10, Coord::new(0, 0), &adjacency_rules, &tile_weights, &tile_model_weights, 2000, 5, false, 100)?;
 //     }
 
-//     let input_data = InputData {
-//         iters: 10,
-//         coord: Coord::new(1, 2),
-//         tile_weights: vec![
-//             1.0,
-//             1.0,
-//             1.0,
-//             1.0,
-//             1.0,
-//             1.0,
-//             1.0,
-//             1.0
-//         ]
-//     };
+//     // let input_data = InputData {
+//     //     iters: 10,
+//     //     coord: Coord::new(1, 2),
+//     //     tile_weights: vec![
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //     ],
+//     //     tile_model_weights: vec![
+//     //         1.0,
+//     //         1.0,
+//     //         1.0,
+//     //         1.0
+//     //     ],
+//     //     seed: 242424,
+//     //     search_radius: 8
+//     // };
 
 //     // let json = serde_json::to_string(&input_data);
 

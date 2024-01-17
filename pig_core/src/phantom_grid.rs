@@ -33,6 +33,10 @@ impl PhantomGrid {
         Ok(())
     }
 
+    pub fn remove_cell(&mut self, coord: &Coord) {
+        self.cells.remove(coord);
+    }
+
     pub fn cell_at(&self, cell_coord: &Coord) -> Option<&Cell> {
         self.cells.get(cell_coord)
     }

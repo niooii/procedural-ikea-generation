@@ -1,9 +1,10 @@
 use crate::{coord::Coord, TileIndex, tile_types::*};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, PartialOrd, Eq)]
 pub struct Cell {
     location: Coord,
     tile_idx: TileIndex,
+    // autoincrements, should at least.
 }
 
 impl Cell {

@@ -25,7 +25,7 @@ pub fn clear_grid() {
     grid.clear();
 }
 
-pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights, tile_model_weights: &TileWeights, seed: u64, starting_search_radius: u32) -> Result<TileInfoWrapper, PigError> {
+pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &AdjacencyRules, tile_weights: &TileWeights, tile_model_weights: &TileWeights, seed: u64, starting_search_radius: u32, increment_radius: bool) -> Result<TileInfoWrapper, PigError> {
     let mut ret = Vec::new();
 
     let mut grid = GRID.lock().unwrap();
@@ -121,4 +121,12 @@ pub fn pig_generate_internal(iters: u32, starting_pos: Coord, adjacency_rules: &
     
 
     Ok(wrapper)
+}
+
+pub fn pig_remove_internal(coords: &Vec<Coord>) {
+    let mut grid = GRID.lock().unwrap();
+
+    for c in coords {
+        grid.remove_cell(c);
+    }
 }
