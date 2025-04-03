@@ -1,7 +1,4 @@
 ﻿# pig-rs
-# gottabetrolling
-# gottabetrolling
+Procedural Ikea Generation, heavily inspired by existing WFC algorithms.  
 
-### you HAVE to be trolling ... .. . .. . . .. . .. . .. . ..
-
-## AHAHAHAHH A!
+### The game's repository is private.
